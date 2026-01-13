@@ -20,7 +20,7 @@ Track your work-from-home (WFH) and office attendance.
   - `P`: Public Holiday
   - `C`: Clear Status
 - **Data Portability**: Export your data to JSON and import it back anytime.
-- **Beautiful UI**: Slick, usable dark-theme UI with smooth animations.
+- **Beautiful UI**: Slick, usable dark-theme UI.
 
 ## Tech Stack
 
