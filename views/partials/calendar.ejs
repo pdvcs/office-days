@@ -1,0 +1,42 @@
+<div class="calendar-header">
+    <button class="nav-btn" hx-get="/calendar/<%= month === 0 ? year - 1 : year %>/<%= month === 0 ? 11 : month - 1 %>"
+        hx-target="#calendar-container">
+        &larr; Previous
+    </button>
+    <h2>
+        <%= monthName %>
+            <%= year %>
+    </h2>
+    <button class="nav-btn" hx-get="/calendar/<%= month === 11 ? year + 1 : year %>/<%= month === 11 ? 0 : month + 1 %>"
+        hx-target="#calendar-container">
+        Next &rarr;
+    </button>
+</div>
+
+<div class="calendar-grid">
+    <div class="weekday-label">Mon</div>
+    <div class="weekday-label">Tue</div>
+    <div class="weekday-label">Wed</div>
+    <div class="weekday-label">Thu</div>
+    <div class="weekday-label">Fri</div>
+    <div class="weekday-label">Sat</div>
+    <div class="weekday-label">Sun</div>
+
+    <% for (let i=0; i < startDay; i++) { %>
+        <div class="day empty"></div>
+        <% } %>
+
+            <% for (let d=1; d <=daysInMonth; d++) { %>
+                <% const dateStr=`${year}-${String(month + 1).padStart(2, '0' )}-${String(d).padStart(2, '0' )}`; 
+                   const dayOfWeek=(startDay + d - 1) % 7; 
+                   // Mon=0...Sun=6. Weekend is Sat(5) and Sun(6)
+                   const isWeekend=dayOfWeek===5 || dayOfWeek===6; %>
+                    <div class="day <%= isWeekend ? 'weekend' : '' %>" data-date="<%= dateStr %>"
+                        onclick="openModal('<%= dateStr %>')">
+                        <span class="day-number">
+                            <%= d %>
+                        </span>
+                        <span class="day-status" id="status-<%= dateStr %>"></span>
+                    </div>
+                    <% } %>
+</div>

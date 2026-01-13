@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Days</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+
+<body>
+    <main class="glass-container">
+        <header>
+            <h1>Office Days</h1>
+            <div class="stats-grid" id="stats-summary">
+                <div class="stat-card">
+                    <span class="label">Total Working Days</span>
+                    <span class="value" id="stat-working">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="label">Office Required</span>
+                    <span class="value" id="stat-required">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="label">In Office</span>
+                    <span class="value" id="stat-office">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="label">In Office %</span>
+                    <span class="value" id="stat-balance">0%</span>
+                </div>
+            </div>
+        </header>
+
+        <section id="calendar-container">
+            <%- include('partials/calendar') %>
+        </section>
+
+        <div id="status-modal" class="modal hidden">
+            <div class="modal-content glass">
+                <h3>Set Status for <span id="modal-date-display"></span></h3>
+                <p><br>Tip: You can use the keyboard shortcuts to set the status.</p>
+                <div class="status-options">
+                    <button class="status-btn office" onclick="setStatus('office')">In Office</button>
+                    <button class="status-btn wfh" onclick="setStatus('wfh')">WFH</button>
+                    <button class="status-btn holiday" onclick="setStatus('holiday')">Holiday</button>
+                    <button class="status-btn absent" onclick="setStatus('absent')">Absent</button>
+                    <button class="status-btn public-holiday" onclick="setStatus('public-holiday')">Public
+                        Holiday</button>
+                    <button class="status-btn clear" onclick="setStatus(null)">Clear</button>
+                </div>
+                <button class="close-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+
+        <div id="shortcuts-modal" class="modal hidden" style="font-size: 1.5rem;">
+            <div class="modal-content" style="background: #222; backdrop-filter: none;">
+                <h3>Keyboard Shortcuts</h3>
+                <p style="font-size: 1rem;"><br>Tip: Hover over a date and press the shortcut key to set the status.</p>
+                <div class="shortcuts-list">
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">In Office</span>
+                        <kbd class="shortcut-key">O</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">WFH</span>
+                        <kbd class="shortcut-key">W</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Holiday</span>
+                        <kbd class="shortcut-key">H</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Absent</span>
+                        <kbd class="shortcut-key">A</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Public Holiday</span>
+                        <kbd class="shortcut-key">P</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Clear Status</span>
+                        <kbd class="shortcut-key">C</kbd>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="closeShortcuts()">Close</button>
+            </div>
+        </div>
+
+        <div class="data-actions">
+            <button class="secondary-btn" onclick="openShortcuts()">Shortcuts</button>
+            <button class="secondary-btn" onclick="exportData()">Export JSON</button>
+            <button class="secondary-btn" onclick="document.getElementById('import-input').click()">Import
+                JSON</button>
+            <input type="file" id="import-input" accept=".json" style="display: none;" onchange="importData(event)">
+        </div>
+    </main>
+    <footer>
+        <p>Copyright &copy; <%= new Date().getFullYear() %> Office Days &bull; Made by 🧠 <a
+                    href="https://pdutta.net">pdutta</a> and 🚀 <a href="https://antigravity.google/">antigravity</a>
+        </p>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+
+</html>

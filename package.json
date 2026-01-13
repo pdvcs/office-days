@@ -1,0 +1,21 @@
+{
+  "name": "office-days",
+  "version": "0.1.0",
+  "description": "Track WFH and Office attendance",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"no test specified\" && exit 0"
+  },
+  "keywords": [
+    "wfh",
+    "office-days"
+  ],
+  "author": "Prasenjeet Dutta",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.2.1"
+  }
+}

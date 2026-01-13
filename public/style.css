@@ -1,0 +1,385 @@
+:root {
+    --primary: #8b5cf6;
+    --primary-glow: rgba(139, 92, 246, 0.6);
+    --bg-dark: #0a0a0c;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #eee;
+    --text-dim: #9ca3af;
+
+    --office-color: #10f9ad;
+    --wfh-color: #38bdf8;
+    --holiday-color: #fbbf24;
+    --absent-color: #f87171;
+    --public-color: #c084fc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 40px 0;
+    gap: 30px;
+}
+
+/* Glass Container */
+.glass-container {
+    width: 95%;
+    max-width: 1100px;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.stats-grid {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    text-align: center;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.stat-card.status-red {
+    background: rgba(248, 113, 113, 0.25);
+    border-color: rgba(248, 113, 113, 0.8);
+    box-shadow: 0 0 15px rgba(248, 113, 113, 0.2);
+}
+
+.stat-card.status-green {
+    background: rgba(16, 249, 173, 0.25);
+    border-color: rgba(16, 249, 173, 0.8);
+    box-shadow: 0 0 15px rgba(16, 249, 173, 0.2);
+}
+
+.stat-card.status-yellow {
+    background: rgba(251, 191, 36, 0.25);
+    border-color: rgba(251, 191, 36, 0.8);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+}
+
+/* Data Actions */
+.data-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 20px;
+}
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: var(--primary);
+}
+
+.stat-card .label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+}
+
+.stat-card .value {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Calendar Styles */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.nav-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+}
+
+.weekday-label {
+    text-align: center;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding-bottom: 8px;
+}
+
+.day {
+    aspect-ratio: 1.5 / 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+}
+
+.day:hover:not(.empty) {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.day.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+.day.weekend {
+    background: rgba(0, 0, 0, 0.2);
+    color: #475569;
+}
+
+.day-number {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.day-status {
+    font-size: 0.7rem;
+    margin-top: 4px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Status Colors */
+.day.status-office {
+    border-color: var(--office-color);
+    box-shadow: inset 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.day.status-office .day-status {
+    color: var(--office-color);
+}
+
+.day.status-wfh {
+    border-color: var(--wfh-color);
+    box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+.day.status-wfh .day-status {
+    color: var(--wfh-color);
+}
+
+.day.status-holiday {
+    border-color: var(--holiday-color);
+    box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+.day.status-holiday .day-status {
+    color: var(--holiday-color);
+}
+
+.day.status-absent {
+    border-color: var(--absent-color);
+    box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.day.status-absent .day-status {
+    color: var(--absent-color);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    padding: 32px;
+    border-radius: 24px;
+    text-align: center;
+}
+
+.status-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.status-btn {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.status-btn:active {
+    transform: scale(0.95);
+}
+
+.status-btn.office {
+    background: rgba(16, 249, 173, 0.8);
+}
+
+.status-btn.wfh {
+    background: rgba(56, 189, 248, 0.8);
+}
+
+.status-btn.holiday {
+    background: rgba(251, 191, 36, 0.8);
+}
+
+.status-btn.absent {
+    background: rgba(248, 113, 113, 0.8);
+}
+
+.status-btn.public-holiday {
+    background: rgba(192, 132, 252, 0.8);
+}
+
+.status-btn.clear {
+    background: #475569;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.shortcuts-list {
+    text-align: left;
+    margin: 20px 0;
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.shortcut-key {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.shortcut-desc {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    padding: 20px;
+}
+
+footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
