@@ -5,6 +5,7 @@ Track your work-from-home (WFH) and office attendance.
 ## Features
 
 - **Monthly Calendar**: Interactive calendar to manage your schedule month by month.
+- **Multi-Date Selection**: Select multiple days at once and apply status to all of them simultaneously - perfect for marking entire weeks or vacation periods.
 - **Status Tracking**: Set your daily status with ease:
   - 🏢 **In Office**
   - 🏠 **WFH**
@@ -12,15 +13,17 @@ Track your work-from-home (WFH) and office attendance.
   - 🤒 **Absent**
   - 🗓️ **Public Holiday**
 - **Real-time Stats**: Track your total working days, office requirements, and "In Office" percentage automatically.
-- **Keyboard Shortcuts**: Power-user shortcuts for quick status updates:
+- **Keyboard Shortcuts**: Power-user shortcuts for quick status updates (desktop):
   - `O`: In Office
   - `W`: WFH
   - `H`: Holiday
   - `A`: Absent
   - `P`: Public Holiday
   - `C`: Clear Status
+  - Works on selected dates or hovered date
+- **Mobile Optimized**: Fully responsive design with touch-friendly interactions.
 - **Data Portability**: Export your data to JSON and import it back anytime.
-- **Beautiful UI**: Slick, usable dark-theme UI.
+- **Beautiful UI**: Slick, usable dark-theme UI with glass morphism aesthetic.
 
 ## Tech Stack
 

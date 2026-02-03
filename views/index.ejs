@@ -37,20 +37,39 @@
             <%- include('partials/calendar') %>
         </section>
 
-        <div id="status-modal" class="modal hidden">
-            <div class="modal-content glass">
-                <h3>Set Status for <span id="modal-date-display"></span></h3>
-                <p><br>Tip: You can use the keyboard shortcuts to set the status.</p>
-                <div class="status-options">
-                    <button class="status-btn office" onclick="setStatus('office')">In Office</button>
-                    <button class="status-btn wfh" onclick="setStatus('wfh')">WFH</button>
-                    <button class="status-btn holiday" onclick="setStatus('holiday')">Holiday</button>
-                    <button class="status-btn absent" onclick="setStatus('absent')">Absent</button>
-                    <button class="status-btn public-holiday" onclick="setStatus('public-holiday')">Public
-                        Holiday</button>
-                    <button class="status-btn clear" onclick="setStatus(null)">Clear</button>
+        <!-- Selection Action Bar -->
+        <div id="selection-actions" class="selection-action-bar">
+            <div class="action-bar-content">
+                <div class="action-bar-header">
+                    <span id="selection-count">0 days selected</span>
+                    <button class="clear-selection-btn" onclick="clearSelection()">Clear</button>
                 </div>
-                <button class="close-btn" onclick="closeModal()">Cancel</button>
+                <div class="action-buttons">
+                    <button class="action-btn office" onclick="applyStatusToSelected('office')">
+                        <span class="btn-emoji">🏢</span>
+                        <span class="btn-label">Office</span>
+                    </button>
+                    <button class="action-btn wfh" onclick="applyStatusToSelected('wfh')">
+                        <span class="btn-emoji">🏠</span>
+                        <span class="btn-label">WFH</span>
+                    </button>
+                    <button class="action-btn holiday" onclick="applyStatusToSelected('holiday')">
+                        <span class="btn-emoji">🌴</span>
+                        <span class="btn-label">Holiday</span>
+                    </button>
+                    <button class="action-btn absent" onclick="applyStatusToSelected('absent')">
+                        <span class="btn-emoji">🤒</span>
+                        <span class="btn-label">Absent</span>
+                    </button>
+                    <button class="action-btn public-holiday" onclick="applyStatusToSelected('public-holiday')">
+                        <span class="btn-emoji">🗓️</span>
+                        <span class="btn-label">Public Holiday</span>
+                    </button>
+                    <button class="action-btn clear" onclick="applyStatusToSelected(null)">
+                        <span class="btn-emoji">✖️</span>
+                        <span class="btn-label">Clear</span>
+                    </button>
+                </div>
             </div>
         </div>
 

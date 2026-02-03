@@ -23,7 +23,7 @@
     <div class="weekday-label">Sun</div>
 
     <% for (let i=0; i < startDay; i++) { %>
-        <div class="day empty"></div>
+        <div class="day empty<%= i >= 5 ? ' weekend' : '' %>"></div>
         <% } %>
 
             <% for (let d=1; d <=daysInMonth; d++) { %>
@@ -32,7 +32,7 @@
                    // Mon=0...Sun=6. Weekend is Sat(5) and Sun(6)
                    const isWeekend=dayOfWeek===5 || dayOfWeek===6; %>
                     <div class="day <%= isWeekend ? 'weekend' : '' %>" data-date="<%= dateStr %>"
-                        onclick="openModal('<%= dateStr %>')">
+                        onclick="toggleDateSelection('<%= dateStr %>')">
                         <span class="day-number">
                             <%= d %>
                         </span>

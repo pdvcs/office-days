@@ -198,6 +198,11 @@ h1 {
     cursor: default;
 }
 
+.day.empty.weekend {
+    background: transparent;
+    border: none;
+}
+
 .day.weekend {
     background: rgba(0, 0, 0, 0.2);
     color: #475569;
@@ -214,6 +219,7 @@ h1 {
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-align: center;
 }
 
 /* Status Colors */
@@ -253,6 +259,153 @@ h1 {
     color: var(--absent-color);
 }
 
+.day.status-public-holiday {
+    border-color: var(--public-color);
+    box-shadow: inset 0 0 10px rgba(192, 132, 252, 0.2);
+}
+
+.day.status-public-holiday .day-status {
+    color: var(--public-color);
+}
+
+/* Selected day styling */
+.day.selected {
+    background: rgba(139, 92, 246, 0.3);
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 20px var(--primary-glow);
+    transform: scale(1.05);
+}
+
+/* Selection Action Bar */
+.selection-action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(30, 41, 59, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    padding: 12px 20px;
+    transform: translateY(100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+    z-index: 50;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.selection-action-bar.visible {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.3s ease, visibility 0s;
+}
+
+.action-bar-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.action-bar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.action-bar-header span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.clear-selection-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    color: var(--text-dim);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.clear-selection-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 10px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-weight: 500;
+}
+
+.action-btn .btn-emoji {
+    font-size: 1.5rem;
+}
+
+.action-btn .btn-label {
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+.action-btn.office:hover {
+    border-color: var(--office-color);
+    background: rgba(16, 249, 173, 0.15);
+}
+
+.action-btn.wfh:hover {
+    border-color: var(--wfh-color);
+    background: rgba(56, 189, 248, 0.15);
+}
+
+.action-btn.holiday:hover {
+    border-color: var(--holiday-color);
+    background: rgba(251, 191, 36, 0.15);
+}
+
+.action-btn.absent:hover {
+    border-color: var(--absent-color);
+    background: rgba(248, 113, 113, 0.15);
+}
+
+.action-btn.public-holiday:hover {
+    border-color: var(--public-color);
+    background: rgba(192, 132, 252, 0.15);
+}
+
+.action-btn.clear:hover {
+    border-color: #64748b;
+    background: rgba(100, 116, 139, 0.15);
+}
+
 /* Modal */
 .modal {
     position: fixed;
@@ -278,9 +431,11 @@ h1 {
 .modal-content {
     width: 90%;
     max-width: 400px;
+    max-height: 90vh;
     padding: 32px;
     border-radius: 24px;
     text-align: center;
+    overflow-y: auto;
 }
 
 .status-options {
@@ -382,4 +537,386 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 0;
+        gap: 20px;
+    }
+
+    .glass-container {
+        width: 100%;
+        padding: 20px;
+        border-radius: 16px;
+        margin: 0 10px;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 30px;
+        align-items: stretch;
+    }
+
+    h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .stats-grid {
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .stat-card {
+        min-width: 100px;
+        padding: 8px 12px;
+    }
+
+    .stat-card .label {
+        font-size: 0.7rem;
+    }
+
+    .stat-card .value {
+        font-size: 1.1rem;
+    }
+
+    .calendar-header {
+        margin-bottom: 20px;
+    }
+
+    .calendar-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .nav-btn {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    /* Hide weekends on mobile */
+    .calendar-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+
+    /* Hide Saturday and Sunday labels (6th and 7th weekday labels) */
+    .weekday-label:nth-child(6),
+    .weekday-label:nth-child(7) {
+        display: none;
+    }
+
+    /* Hide all weekend day cells */
+    .day.weekend {
+        display: none;
+    }
+
+    .weekday-label {
+        font-size: 0.75rem;
+        padding-bottom: 6px;
+    }
+
+    .day {
+        aspect-ratio: 1.2 / 1;
+    }
+
+    .day-number {
+        font-size: 1rem;
+    }
+
+    .day-status {
+        font-size: 0.6rem;
+        margin-top: 2px;
+    }
+
+    /* Selection styling on mobile */
+    .day.selected {
+        transform: scale(1.03);
+    }
+
+    /* Compact single-row action bar on mobile */
+    .selection-action-bar {
+        padding: 12px 16px;
+    }
+
+    .action-bar-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-bar-header {
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .action-bar-header span {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .clear-selection-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        border-radius: 12px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 6px;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        min-height: unset;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .action-btn .btn-label {
+        display: none;
+    }
+
+    .action-btn .btn-emoji {
+        font-size: 1.2rem;
+    }
+
+    .data-actions {
+        margin-top: 20px;
+        padding-top: 15px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Hide Shortcuts button on mobile (first button in data-actions) */
+    .data-actions .secondary-btn:first-child {
+        display: none;
+    }
+
+    .secondary-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        flex: 1;
+        min-width: 100px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .status-options {
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .status-btn {
+        padding: 16px;
+        font-size: 1rem;
+    }
+
+    footer {
+        font-size: 0.85rem;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.7rem;
+    }
+
+    .glass-container {
+        margin: 0 5px;
+        padding: 15px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .stat-card {
+        min-width: unset;
+    }
+
+    .calendar-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .nav-btn {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+    }
+
+    .weekday-label {
+        font-size: 0.7rem;
+    }
+
+    .day {
+        aspect-ratio: 1.1 / 1;
+    }
+
+    .day-number {
+        font-size: 0.9rem;
+    }
+
+    .day-status {
+        font-size: 0.55rem;
+    }
+
+    /* Action bar on small mobile: single row, no count text */
+    .selection-action-bar {
+        padding: 10px 12px;
+    }
+
+    .action-bar-content {
+        gap: 6px;
+    }
+
+    /* Hide "N days selected" text — selected days are visually highlighted */
+    .action-bar-header span {
+        display: none;
+    }
+
+    /* Reorder: buttons first, × dismiss on the right */
+    .action-buttons {
+        order: 0;
+        gap: 4px;
+        justify-content: center;
+    }
+
+    .action-bar-header {
+        order: 1;
+        flex-shrink: 0;
+    }
+
+    /* Shrink "Clear" down to a compact × icon */
+    .clear-selection-btn {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        font-size: 0;
+        color: transparent;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .clear-selection-btn::before {
+        content: "×";
+        font-size: 1.2rem;
+        color: var(--text-dim);
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .action-btn .btn-emoji {
+        font-size: 1.1rem;
+    }
+
+    .data-actions {
+        gap: 6px;
+    }
+
+    .secondary-btn {
+        padding: 12px 10px;
+        font-size: 0.8rem;
+        min-width: 80px;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 1.2rem;
+    }
+
+    .status-btn {
+        padding: 14px;
+        font-size: 0.95rem;
+    }
+
+    footer {
+        font-size: 0.75rem;
+    }
+}
+
+/* Landscape mobile phones */
+@media (max-width: 768px) and (orientation: landscape) {
+    body {
+        padding: 10px 0;
+    }
+
+    .glass-container {
+        padding: 15px;
+    }
+
+    header {
+        margin-bottom: 15px;
+        gap: 15px;
+    }
+
+    .calendar-header {
+        margin-bottom: 15px;
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .day {
+        aspect-ratio: 1.3 / 1;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+    .day:not(.empty) {
+        min-height: 44px;
+    }
+
+    .status-btn,
+    .secondary-btn,
+    .nav-btn,
+    .action-btn {
+        min-height: 36px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .day:hover:not(.empty) {
+        transform: none;
+    }
+
+    .day:active:not(.empty) {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--primary);
+    }
 }

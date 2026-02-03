@@ -1,4 +1,4 @@
-let currentSelectedDate = null;
+const selectedDates = new Set();
 let hoveredDate = null;
 
 // Initialize on HTMX load
@@ -7,6 +7,7 @@ document.body.addEventListener('htmx:afterOnLoad', function (evt) {
     renderStoredStatuses();
     calculateStats();
     attachHoverListeners();
+    clearSelection();
   }
 });
 
@@ -35,45 +36,81 @@ window.addEventListener('keydown', (e) => {
   };
 
   if (statusMap.hasOwnProperty(key)) {
-    // If modal is open, use the selected date
-    const modal = document.getElementById('status-modal');
-    const targetDate = (modal && !modal.classList.contains('hidden')) ? currentSelectedDate : hoveredDate;
-
-    if (targetDate) {
-      // Temporarily set currentSelectedDate if we're using hover
-      const prevSelected = currentSelectedDate;
-      currentSelectedDate = targetDate;
-      setStatus(statusMap[key]);
-      currentSelectedDate = prevSelected;
+    // Apply to selected dates if any, otherwise to hovered date
+    if (selectedDates.size > 0) {
+      applyStatusToSelected(statusMap[key]);
+    } else if (hoveredDate) {
+      selectedDates.add(hoveredDate);
+      updateSelectionUI();
+      applyStatusToSelected(statusMap[key]);
     }
   }
 
-  // Escape key to close modals
+  // Escape key to clear selection and close modals
   if (key === 'escape') {
-    closeModal();
+    clearSelection();
     closeShortcuts();
   }
 });
 
-function formatDateDisplay (dateStr) {
-  const [year, month, day] = dateStr.split('-');
-  const date = new Date(year, month - 1, day);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${parseInt(day)} ${months[date.getMonth()]} ${year}`;
+function toggleDateSelection (date) {
+  if (selectedDates.has(date)) {
+    selectedDates.delete(date);
+  } else {
+    selectedDates.add(date);
+  }
+  updateSelectionUI();
 }
 
-function openModal (date) {
-  currentSelectedDate = date;
-  document.getElementById('modal-date-display').innerText = formatDateDisplay(date);
-  document.getElementById('status-modal').classList.add('active');
-  document.getElementById('status-modal').classList.remove('hidden');
+function clearSelection () {
+  selectedDates.clear();
+  updateSelectionUI();
 }
 
-function closeModal () {
-  document.getElementById('status-modal').classList.remove('active');
-  setTimeout(() => {
-    document.getElementById('status-modal').classList.add('hidden');
-  }, 300);
+function updateSelectionUI () {
+  // Remove selected class from all days
+  document.querySelectorAll('.day.selected').forEach(day => {
+    day.classList.remove('selected');
+  });
+
+  // Add selected class to selected days
+  selectedDates.forEach(date => {
+    const dayEl = document.querySelector(`.day[data-date="${date}"]`);
+    if (dayEl) {
+      dayEl.classList.add('selected');
+    }
+  });
+
+  // Show/hide action bar based on selection
+  const actionBar = document.getElementById('selection-actions');
+  const selectionCount = document.getElementById('selection-count');
+
+  if (selectedDates.size > 0) {
+    actionBar.classList.add('visible');
+    selectionCount.innerText = `${selectedDates.size} day${selectedDates.size > 1 ? 's' : ''} selected`;
+  } else {
+    actionBar.classList.remove('visible');
+    selectionCount.innerText = '';
+  }
+}
+
+function applyStatusToSelected (status) {
+  if (selectedDates.size === 0) return;
+
+  const data = JSON.parse(localStorage.getItem('wfh-data') || '{}');
+
+  selectedDates.forEach(date => {
+    if (status) {
+      data[date] = status;
+    } else {
+      delete data[date];
+    }
+    updateDayUI(date, status);
+  });
+
+  localStorage.setItem('wfh-data', JSON.stringify(data));
+  calculateStats();
+  clearSelection();
 }
 
 function openShortcuts () {
@@ -88,26 +125,17 @@ function closeShortcuts () {
   }, 300);
 }
 
-function setStatus (status) {
-  const data = JSON.parse(localStorage.getItem('wfh-data') || '{}');
-  if (status) {
-    data[currentSelectedDate] = status;
-  } else {
-    delete data[currentSelectedDate];
-  }
-  localStorage.setItem('wfh-data', JSON.stringify(data));
-
-  updateDayUI(currentSelectedDate, status);
-  calculateStats();
-  closeModal();
-}
-
 function updateDayUI (date, status) {
   const dayEl = document.querySelector(`.day[data-date="${date}"]`);
   if (!dayEl) return;
 
-  // Clear existing status classes
+  // Clear existing status classes (but preserve selected class)
+  const isSelected = dayEl.classList.contains('selected');
   dayEl.className = dayEl.className.replace(/status-\S+/g, '').trim();
+  if (isSelected) {
+    dayEl.classList.add('selected');
+  }
+
   const statusEl = document.getElementById(`status-${date}`);
 
   if (status) {
@@ -256,4 +284,5 @@ function importData (event) {
 window.onload = () => {
   renderStoredStatuses();
   calculateStats();
+  attachHoverListeners();
 };
