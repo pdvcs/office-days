@@ -224,6 +224,7 @@ h1 {
 
 /* Status Colors */
 .day.status-office {
+    background: rgba(16, 249, 173, 0.15);
     border-color: var(--office-color);
     box-shadow: inset 0 0 10px rgba(16, 185, 129, 0.2);
 }
@@ -233,6 +234,7 @@ h1 {
 }
 
 .day.status-wfh {
+    background: rgba(56, 189, 248, 0.15);
     border-color: var(--wfh-color);
     box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2);
 }
@@ -242,6 +244,7 @@ h1 {
 }
 
 .day.status-holiday {
+    background: rgba(251, 191, 36, 0.15);
     border-color: var(--holiday-color);
     box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.2);
 }
@@ -251,6 +254,7 @@ h1 {
 }
 
 .day.status-absent {
+    background: rgba(248, 113, 113, 0.15);
     border-color: var(--absent-color);
     box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.2);
 }
@@ -260,6 +264,7 @@ h1 {
 }
 
 .day.status-public-holiday {
+    background: rgba(192, 132, 252, 0.15);
     border-color: var(--public-color);
     box-shadow: inset 0 0 10px rgba(192, 132, 252, 0.2);
 }
@@ -274,6 +279,36 @@ h1 {
     border: 2px solid var(--primary);
     box-shadow: 0 0 20px var(--primary-glow);
     transform: scale(1.05);
+}
+
+.day.selected.status-office {
+    background: rgba(16, 249, 173, 0.5);
+    border-color: var(--office-color);
+    box-shadow: 0 0 20px rgba(16, 249, 173, 0.6);
+}
+
+.day.selected.status-wfh {
+    background: rgba(56, 189, 248, 0.5);
+    border-color: var(--wfh-color);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+}
+
+.day.selected.status-holiday {
+    background: rgba(251, 191, 36, 0.5);
+    border-color: var(--holiday-color);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+}
+
+.day.selected.status-absent {
+    background: rgba(248, 113, 113, 0.5);
+    border-color: var(--absent-color);
+    box-shadow: 0 0 20px rgba(248, 113, 113, 0.6);
+}
+
+.day.selected.status-public-holiday {
+    background: rgba(192, 132, 252, 0.5);
+    border-color: var(--public-color);
+    box-shadow: 0 0 20px rgba(192, 132, 252, 0.6);
 }
 
 /* Selection Action Bar */
@@ -669,14 +704,14 @@ footer a:hover {
 
     .action-buttons {
         display: flex;
-        gap: 6px;
+        gap: 8px;
         flex: 1;
         justify-content: center;
     }
 
     .action-btn {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         min-height: unset;
         padding: 0;
         border-radius: 50%;
@@ -689,7 +724,7 @@ footer a:hover {
     }
 
     .action-btn .btn-emoji {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
     }
 
     .data-actions {
@@ -815,8 +850,8 @@ footer a:hover {
 
     /* Shrink "Clear" down to a compact × icon */
     .clear-selection-btn {
-        width: 28px;
-        height: 28px;
+        width: 36px;
+        height: 36px;
         padding: 0;
         font-size: 0;
         color: transparent;
@@ -828,17 +863,17 @@ footer a:hover {
 
     .clear-selection-btn::before {
         content: "×";
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         color: var(--text-dim);
     }
 
     .action-btn {
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
     }
 
     .action-btn .btn-emoji {
-        font-size: 1.1rem;
+        font-size: 1.4rem;
     }
 
     .data-actions {

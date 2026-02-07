@@ -1,3 +1,5 @@
+/* eslint-env browser */
+
 const selectedDates = new Set();
 let hoveredDate = null;
 
@@ -53,7 +55,7 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-function toggleDateSelection (date) {
+function toggleDateSelection (date) { // eslint-disable-line no-unused-vars
   if (selectedDates.has(date)) {
     selectedDates.delete(date);
   } else {
@@ -113,7 +115,7 @@ function applyStatusToSelected (status) {
   clearSelection();
 }
 
-function openShortcuts () {
+function openShortcuts () { // eslint-disable-line no-unused-vars
   document.getElementById('shortcuts-modal').classList.add('active');
   document.getElementById('shortcuts-modal').classList.remove('hidden');
 }
@@ -237,7 +239,7 @@ function readableTimestamp () {
   return new Date().toISOString().replace('T', '_').slice(0, 19).replace(/:/g, '-');
 }
 
-function exportData () {
+function exportData () { // eslint-disable-line no-unused-vars
   const data = localStorage.getItem('wfh-data') || '{}';
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -255,7 +257,7 @@ function exportData () {
   }, 500);
 }
 
-function importData (event) {
+function importData (event) { // eslint-disable-line no-unused-vars
   const file = event.target.files[0];
   if (!file) return;
 
