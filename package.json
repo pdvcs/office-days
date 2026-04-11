@@ -1,21 +1,31 @@
 {
   "name": "office-days",
-  "version": "0.1.0",
-  "description": "Track WFH and Office attendance",
-  "main": "server.js",
+  "version": "0.1.1",
+  "description": "Track WFH and Office attendance (Cloudflare edge)",
+  "main": "src/index.tsx",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"no test specified\" && exit 0"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute office_days --local --file=./schema.sql",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "wfh",
-    "office-days"
+    "office-days",
+    "cloudflare"
   ],
   "author": "Prasenjeet Dutta",
   "license": "MIT",
-  "type": "commonjs",
   "dependencies": {
-    "ejs": "^3.1.10",
-    "express": "^5.2.1"
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240208.0",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.81.1"
   }
 }

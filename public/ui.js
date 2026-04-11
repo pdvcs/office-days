@@ -1,15 +1,16 @@
 /* eslint-env browser */
 
+const { collectDayStates, computeStats } = globalThis.OfficeDaysStats
 const selectedDates = new Set();
 let hoveredDate = null;
 
 // Initialize on HTMX load
 document.body.addEventListener('htmx:afterOnLoad', function (evt) {
   if (evt.detail.target.id === 'calendar-container') {
-    renderStoredStatuses();
     calculateStats();
     attachHoverListeners();
     clearSelection();
+    syncExportLinks();
   }
 });
 
@@ -32,6 +33,7 @@ window.addEventListener('keydown', (e) => {
     o: 'office',
     w: 'wfh',
     h: 'holiday',
+    e: 'exception',
     a: 'absent',
     p: 'public-holiday',
     c: null
@@ -96,23 +98,29 @@ function updateSelectionUI () {
   }
 }
 
-function applyStatusToSelected (status) {
+async function applyStatusToSelected (status) {
   if (selectedDates.size === 0) return;
 
-  const data = JSON.parse(localStorage.getItem('wfh-data') || '{}');
-
+  const updates = {};
   selectedDates.forEach(date => {
-    if (status) {
-      data[date] = status;
-    } else {
-      delete data[date];
-    }
+    updates[date] = status;
     updateDayUI(date, status);
   });
 
-  localStorage.setItem('wfh-data', JSON.stringify(data));
+  // Optimistic UI updates
   calculateStats();
   clearSelection();
+
+  // Background sync to server
+  try {
+    await fetch('/api/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ updates })
+    });
+  } catch (e) {
+    console.error("Failed to sync to database:", e);
+  }
 }
 
 function openShortcuts () { // eslint-disable-line no-unused-vars
@@ -148,67 +156,21 @@ function updateDayUI (date, status) {
   }
 }
 
-function renderStoredStatuses () {
-  const data = JSON.parse(localStorage.getItem('wfh-data') || '{}');
-  Object.keys(data).forEach(date => {
-    updateDayUI(date, data[date]);
-  });
-}
-
 function calculateStats () {
-  const data = JSON.parse(localStorage.getItem('wfh-data') || '{}');
+  const daysElements = document.querySelectorAll('.day[data-date]');
+  if (!daysElements.length) return;
 
-  // Get year and month from calendar header
-  const headerEl = document.querySelector('.calendar-header h2');
-  if (!headerEl) return;
-
-  const headerText = headerEl.innerText;
-  const [monthName, year] = headerText.split(' ');
-  const month = new Date(`${monthName} 1, ${year}`).getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  let weekdayCount = 0;
-  let officeCount = 0;
-  let skipCount = 0; // Holidays, Absences, Public Holidays
-  let allWeekdaysMarked = true;
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const dateObj = new Date(year, month, d);
-    const dayOfWeek = dateObj.getDay();
-    const status = data[dateStr];
-
-    // Only count/check weekdays
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-      weekdayCount++;
-
-      if (status === 'holiday' || status === 'absent' || status === 'public-holiday') {
-        skipCount++;
-      } else if (status === 'office') {
-        officeCount++;
-      } else if (status === 'wfh') {
-        // counted in stats implicitly by not being skipped
-      } else {
-        // No status marked for this weekday
-        allWeekdaysMarked = false;
-      }
-    }
-  }
-
-  const workingDays = weekdayCount - skipCount;
-  const officeRequired = Math.round(workingDays * 0.60);
+  const stats = computeStats(collectDayStates(daysElements));
 
   const workingEl = document.getElementById('stat-working');
   const requiredEl = document.getElementById('stat-required');
   const officeEl = document.getElementById('stat-office');
   const balanceEl = document.getElementById('stat-balance');
 
-  workingEl.innerText = workingDays;
-  requiredEl.innerText = officeRequired;
-  officeEl.innerText = officeCount;
-
-  const balance = workingDays === 0 ? 0 : Math.round((officeCount / workingDays) * 100);
-  balanceEl.innerText = `${balance}%`;
+  workingEl.innerText = stats.workingDays;
+  requiredEl.innerText = stats.officeRequired;
+  officeEl.innerText = stats.officeCount;
+  balanceEl.innerText = `${stats.balance}%`;
 
   // Conditional Styling
   const officeCard = officeEl.closest('.stat-card');
@@ -220,41 +182,39 @@ function calculateStats () {
   officeCard.classList.remove('status-red', 'status-green');
   balanceCard.classList.remove('status-red', 'status-green');
 
-  if (officeCount >= officeRequired && workingDays > 0) {
+  if (stats.officeCount >= stats.officeRequired && stats.workingDays > 0) {
     officeCard.classList.add('status-green');
     balanceCard.classList.add('status-green');
-  } else if (workingDays > 0) {
+  } else if (stats.workingDays > 0) {
     officeCard.classList.add('status-red');
     balanceCard.classList.add('status-red');
   }
 
   // Working Days Card: Yellow if any weekday is unmarked
   workingCard.classList.remove('status-yellow');
-  if (!allWeekdaysMarked && weekdayCount > 0) {
+  if (!stats.allWeekdaysMarked && stats.hasWeekdays) {
     workingCard.classList.add('status-yellow');
   }
 }
 
-function readableTimestamp () {
-  return new Date().toISOString().replace('T', '_').slice(0, 19).replace(/:/g, '-');
+function getCurrentPeriodStart () {
+  return document.querySelector('.calendar-period')?.getAttribute('data-period-start');
 }
 
-function exportData () { // eslint-disable-line no-unused-vars
-  const data = localStorage.getItem('wfh-data') || '{}';
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `wfh-tracker-backup-${readableTimestamp()}.json`;
-  a.style.display = 'none'; // Explicitly hide
-  document.body.appendChild(a);
-  a.click();
+function syncExportLinks () {
+  const periodStart = getCurrentPeriodStart();
+  if (!periodStart) return;
 
-  // Delay removal to ensure download starts
-  setTimeout(() => {
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 500);
+  const htmlLink = document.getElementById('export-html-link');
+  const jsonLink = document.getElementById('export-json-link');
+
+  if (htmlLink) {
+    htmlLink.href = `/export/html/${periodStart}`;
+  }
+
+  if (jsonLink) {
+    jsonLink.href = `/export/json/${periodStart}`;
+  }
 }
 
 function importData (event) { // eslint-disable-line no-unused-vars
@@ -262,19 +222,20 @@ function importData (event) { // eslint-disable-line no-unused-vars
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function (e) {
+  reader.onload = async function (e) {
     try {
       const content = e.target.result;
-      // Validate JSON
-      JSON.parse(content);
-      localStorage.setItem('wfh-data', content);
+      const parsed = JSON.parse(content);
+      
+      await fetch('/api/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: parsed })
+      });
 
-      // Refresh UI
-      renderStoredStatuses();
-      calculateStats();
-      alert('Data imported successfully!');
+      location.reload(); // Hard reload to fetch new UI
     } catch (err) {
-      alert('Error parsing JSON file. Please make sure it is a valid export.');
+      alert('Error parsing JSON file or syncing to server. Please make sure it is a valid export.');
     }
   };
   reader.readAsText(file);
@@ -284,7 +245,17 @@ function importData (event) { // eslint-disable-line no-unused-vars
 
 // Initial render for page load
 window.onload = () => {
-  renderStoredStatuses();
   calculateStats();
   attachHoverListeners();
+  syncExportLinks();
 };
+
+Object.assign(globalThis, {
+  applyStatusToSelected,
+  closeShortcuts,
+  getCurrentPeriodStart,
+  importData,
+  openShortcuts,
+  syncExportLinks,
+  toggleDateSelection
+});

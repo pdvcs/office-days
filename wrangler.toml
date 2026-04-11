@@ -1,0 +1,13 @@
+name = "office-days"
+compatibility_date = "2024-02-08"
+main = "src/index.tsx"
+assets = { directory = "public" }
+
+[[d1_databases]]
+binding = "DB" # accessible in hono as c.env.DB
+database_name = "office_days"
+database_id = "6c7791b2-4112-49ff-8fea-f66012bb6868"
+
+[[routes]]
+pattern = "office-days.dutta.org.uk"
+custom_domain = true
