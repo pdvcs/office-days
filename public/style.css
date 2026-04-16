@@ -702,59 +702,66 @@ footer a:hover {
         transform: scale(1.03);
     }
 
-    /* Compact single-row action bar on mobile */
+    /* Larger card for selection on mobile */
     .selection-action-bar {
-        padding: 12px 16px;
+        padding: 20px 16px 24px;
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
     }
 
     .action-bar-content {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
     }
 
     .action-bar-header {
-        margin-bottom: 0;
+        margin-bottom: 4px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 6px;
-        flex-shrink: 0;
     }
 
     .action-bar-header span {
-        font-size: 0.8rem;
+        font-size: 0.95rem;
         font-weight: 600;
     }
 
     .clear-selection-btn {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        padding: 8px 14px;
+        font-size: 0.85rem;
         border-radius: 12px;
     }
 
     .action-buttons {
         display: flex;
-        gap: 8px;
-        flex: 1;
+        flex-wrap: wrap;
         justify-content: center;
+        gap: 12px;
+        width: 100%;
     }
 
     .action-btn {
-        width: 48px;
-        height: 48px;
+        width: calc(25% - 12px);
+        min-width: 70px;
+        height: auto;
         min-height: unset;
-        padding: 0;
-        border-radius: 50%;
+        padding: 12px 4px;
+        border-radius: 16px;
+        flex-direction: column;
         justify-content: center;
-        flex-shrink: 0;
+        gap: 6px;
     }
 
     .action-btn .btn-label {
-        display: none;
+        display: block;
+        font-size: 0.7rem;
     }
 
     .action-btn .btn-emoji {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
     }
 
     .data-actions {

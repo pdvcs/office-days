@@ -502,24 +502,31 @@ export function createApp () {
                 <div class="action-buttons">
                     <button class="action-btn office" onclick="applyStatusToSelected('office')">
                         <span class="btn-emoji">🏢</span>
+                        <span class="btn-label">Office</span>
                     </button>
                     <button class="action-btn wfh" onclick="applyStatusToSelected('wfh')">
                         <span class="btn-emoji">🏠</span>
+                        <span class="btn-label">WFH</span>
                     </button>
                     <button class="action-btn holiday" onclick="applyStatusToSelected('holiday')">
                         <span class="btn-emoji">🌴</span>
+                        <span class="btn-label">Holiday</span>
                     </button>
                     <button class="action-btn exception" onclick="applyStatusToSelected('exception')">
                         <span class="btn-emoji">🚂</span>
+                        <span class="btn-label">Exception</span>
                     </button>
                     <button class="action-btn absent" onclick="applyStatusToSelected('absent')">
                         <span class="btn-emoji">🤒</span>
+                        <span class="btn-label">Absent</span>
                     </button>
                     <button class="action-btn public-holiday" onclick="applyStatusToSelected('public-holiday')">
                         <span class="btn-emoji">🗓️</span>
+                        <span class="btn-label">Public Hol</span>
                     </button>
                     <button class="action-btn clear" onclick="applyStatusToSelected(null)">
                         <span class="btn-emoji">🗑️</span>
+                        <span class="btn-label">Clear</span>
                     </button>
                 </div>
             </div>
